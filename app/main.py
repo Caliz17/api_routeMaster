@@ -27,11 +27,11 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
     contact={
-        "name": "Tu Nombre",
-        "email": "tu@email.com",
+        "name": "ING. SISTEMAS",
+        "email": "ecalizc@miumg.edu.gt",
     },
     license_info={
-        "name": "MIT",
+        "name": "MIUMG",
     }
 )
 

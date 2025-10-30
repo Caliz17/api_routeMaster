@@ -4,11 +4,12 @@ from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from app.config.database import SessionLocal
 from app.models.user import User
+from app.config.config import settings
 
 # Configuración
-SECRET_KEY = "tu_clave_secreta_super_segura_cambiar_en_produccion"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
 # Usar bcrypt con configuración específica
 pwd_context = CryptContext(
