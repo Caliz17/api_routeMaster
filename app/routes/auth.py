@@ -6,6 +6,7 @@ from app.schemas.user import UserCreate, UserLogin, LoginResponse
 from app.auth.utils import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 from app.crud.user import create_user, get_user_by_email, get_user_by_username
 from app.auth.dependencies import get_current_active_user
+from app.auth.validators import validate_password
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -14,6 +15,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     """
     Registrar un nuevo usuario
     """
+    validate_password(user.password)
     # Verificar si el email ya existe
     if get_user_by_email(db, user.email):
         raise HTTPException(
