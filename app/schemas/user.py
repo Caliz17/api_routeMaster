@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 from typing import Optional
+from app.schemas.role import RoleResponse
 
 class UserBase(BaseModel):
     username: str
@@ -8,6 +9,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str
+    role_id: int = 1
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -16,6 +18,7 @@ class UserLogin(BaseModel):
 class UserResponse(UserBase):
     id: int
     is_active: bool
+    role: RoleResponse
     created_at: datetime
     
     class Config:

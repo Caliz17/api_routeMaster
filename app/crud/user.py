@@ -16,11 +16,20 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
     return db.query(User).order_by(User.id).offset(skip).limit(limit).all()
 
 def create_user(db: Session, user: UserCreate):
+    from app.models.role import Role
+    default_role = db.query(Role).filter(Role.name == "usuario_sistema").first()
+    
+    if not default_role:
+        default_role = db.query(Role).first()
+        if not default_role:
+            raise Exception("No hay roles disponibles en la base de datos")
+    
     hashed_password = get_password_hash(user.password)
     db_user = User(
         username=user.username,
         email=user.email,
-        password=hashed_password
+        password=hashed_password,
+        role_id=default_role.id 
     )
     db.add(db_user)
     db.commit()
