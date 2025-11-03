@@ -9,7 +9,7 @@ class RutaCliente(Base):
     id = Column(Integer, primary_key=True, index=True)
     ruta_id = Column(Integer, ForeignKey("rutas.id"), nullable=False)
     cliente_id = Column(Integer, ForeignKey("clientes.id"), nullable=False)
-    orden_visita = Column(Integer, nullable=False)
+    orden = Column(Integer, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relaciones

@@ -4,3 +4,4 @@ from .permission import *
 from .cliente import *
 from .producto import *
 from .pedido import *
+from .ruta import *
