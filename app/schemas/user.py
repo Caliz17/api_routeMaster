@@ -49,3 +49,6 @@ class RefreshTokenResponse(BaseModel):
 class UserUpdate(BaseModel):
     username: Optional[str] = None
     email: Optional[str] = None
+
+class UserRoleUpdate(BaseModel):
+    role_id: int

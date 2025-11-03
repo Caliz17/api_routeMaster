@@ -1,24 +1,26 @@
 from pydantic import BaseModel
 from typing import Optional, List
-from app.schemas.permission import PermissionResponse 
 
-class RoleBase(BaseModel):
+class PermissionBase(BaseModel):
     name: str
     description: Optional[str] = None
+    module: str
+    action: str
 
-class RoleCreate(RoleBase):
+class PermissionCreate(PermissionBase):
     pass
 
-class RoleResponse(RoleBase):
+class PermissionResponse(PermissionBase):
     id: int
     is_active: bool
     
     class Config:
         from_attributes = True
 
-class RoleWithPermissions(RoleBase):
+class RoleWithPermissions(BaseModel):
     id: int
-    is_active: bool
+    name: str
+    description: Optional[str]
     permissions: List[PermissionResponse]
     
     class Config:

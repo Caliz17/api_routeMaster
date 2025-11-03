@@ -54,19 +54,33 @@ def authenticate_user(email: str, password: str):
 
 def get_current_user(token: str, db = None):
     try:
+        print(f"🔍 Verificando token: {token[:50]}...")  # ✅ LOG para debug
+        
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
+        
+        print(f"🔍 Email del token: {email}")  # ✅ LOG para debug
+        
         if email is None:
+            print("❌ Token no tiene email")
             return None
-    except JWTError:
+            
+    except JWTError as e:
+        print(f"❌ Error decodificando token: {e}")  # ✅ LOG para debug
+        return None
+    except Exception as e:
+        print(f"❌ Error inesperado: {e}")  # ✅ LOG para debug
         return None
     
     if db:
-        return db.query(User).filter(User.email == email).first()
+        user = db.query(User).filter(User.email == email).first()
     else:
         from app.config.database import SessionLocal
         db_session = SessionLocal()
         try:
-            return db_session.query(User).filter(User.email == email).first()
+            user = db_session.query(User).filter(User.email == email).first()
         finally:
             db_session.close()
+    
+    print(f"🔍 Usuario encontrado: {user}")  # ✅ LOG para debug
+    return user

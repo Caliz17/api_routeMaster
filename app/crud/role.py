@@ -17,3 +17,7 @@ def create_role(db: Session, role: RoleCreate):
     db.commit()
     db.refresh(db_role)
     return db_role
+
+def get_roles_with_permissions(db: Session):
+    """Obtener roles con información de permisos"""
+    return db.query(Role).all()

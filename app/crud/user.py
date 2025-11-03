@@ -56,3 +56,16 @@ def delete_user(db: Session, user_id: int):
         db.commit()
         return True
     return False
+
+def update_user_role(db: Session, user_id: int, role_id: int):
+    """
+    Actualizar el rol de un usuario
+    """
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        return None
+    
+    user.role_id = role_id
+    db.commit()
+    db.refresh(user)
+    return user
