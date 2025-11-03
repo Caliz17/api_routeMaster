@@ -128,9 +128,27 @@ async def can_view_reports(current_user: User = Depends(get_current_active_user)
     """Verificar permiso para ver reportes"""
     return await check_permission("reports.view", current_user)
 
-async def can_manage_products(current_user: User = Depends(get_current_active_user)):
-    """Verificar permiso para gestionar productos"""
-    return await check_permission("products.manage", current_user)
+def can_manage_products(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)):
+    """Verificar si el usuario puede gestionar productos"""
+    # Cargar el rol y permisos del usuario
+    user_with_permissions = db.query(User).join(User.role).filter(User.id == current_user.id).first()
+    
+    if not user_with_permissions or not user_with_permissions.role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permisos para gestionar productos"
+        )
+    
+    # Verificar si tiene el permiso products.manage
+    user_permissions = [perm.name for perm in user_with_permissions.role.permissions]
+    
+    if "products.manage" not in user_permissions:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes el permiso: products.manage"
+        )
+    
+    return current_user
 
 async def can_manage_orders(current_user: User = Depends(get_current_active_user)):
     """Verificar permiso para gestionar pedidos"""

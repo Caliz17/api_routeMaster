@@ -22,3 +22,10 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     role = relationship("Role", back_populates="users")
+
+    # Relaciones
+    role = relationship("Role", back_populates="users")
+    rutas_creadas = relationship("Ruta", back_populates="creada_por")  # Relación con rutas creadas por el usuario
+    rutas_asignadas = relationship("RutaAsignada", back_populates="usuario")  # Relación con rutas asignadas al usuario
+    pedidos = relationship("Pedido", back_populates="vendedor")  # Relación con pedidos realizados por el usuario
+    entregas = relationship("Entrega", back_populates="repartidor")  # Relación con entregas realizadas por el usuario

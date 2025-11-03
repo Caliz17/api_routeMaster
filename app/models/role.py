@@ -20,5 +20,4 @@ class Role(Base):
     
     # Relaciones
     users = relationship("User", back_populates="role")
-    # ✅ NUEVA RELACIÓN: Un rol puede tener muchos permisos
     permissions = relationship("Permission", secondary=role_permission, back_populates="roles")

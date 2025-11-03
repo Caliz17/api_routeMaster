@@ -3,4 +3,4 @@ from .role import *
 from .permission import *
 from .cliente import *
 from .producto import *
-from .pedido import *
+from .pedidos import *

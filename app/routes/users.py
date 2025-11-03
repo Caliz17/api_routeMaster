@@ -6,6 +6,7 @@ from app.schemas.user import UserResponse, UserUpdate, UserRoleUpdate
 from app.auth.dependencies import get_current_active_user
 from app.crud.user import get_users, get_user, update_user, delete_user, get_user_by_email, get_user_by_username, update_user_role
 from app.models.user import User
+from app.models.role import Role
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -75,3 +76,28 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """
     users = get_users(db, skip=skip, limit=limit)
     return users
+
+@router.get("/me/permissions")
+def get_my_permissions(
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Obtener los permisos del usuario actual"""
+    # Cargar las relaciones necesarias
+    from sqlalchemy.orm import joinedload
+    user_with_role = db.query(User).options(
+        joinedload(User.role).joinedload(Role.permissions)
+    ).filter(User.id == current_user.id).first()
+    
+    permissions = []
+    
+    if user_with_role and user_with_role.role:
+        for permission in user_with_role.role.permissions:
+            permissions.append(permission.name)
+    
+    return {
+        "user_id": current_user.id,
+        "email": current_user.email,
+        "role": user_with_role.role.name if user_with_role and user_with_role.role else None,
+        "permissions": permissions
+    }
