@@ -4,7 +4,7 @@ from app.config.database import Base, engine
 from app.models.user import User
 from app.models.role import Role
 from app.models.permission import Permission
-from app.routes import auth, users, admin, productos, clientes, productos, pedidos, rutas
+from app.routes import auth, users, admin, productos, clientes, productos, pedidos, rutas, dashboard
 
 # Crear tablas
 try:
@@ -63,6 +63,7 @@ app.include_router(productos.router)
 app.include_router(clientes.router)
 app.include_router(pedidos.router)
 app.include_router(rutas.router)
+app.include_router(dashboard.router)
 
 @app.get("/", tags=["Root"])
 def read_root():

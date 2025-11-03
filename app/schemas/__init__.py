@@ -5,3 +5,4 @@ from .cliente import *
 from .producto import *
 from .pedidos import *
 from .ruta import *
+from .dashboard import *
