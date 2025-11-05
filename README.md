@@ -50,32 +50,232 @@ Una API moderna y escalable construida con FastAPI, SQL Server y autenticación 
 - Python 3.10+
 - SQL Server 2019+
 - Docker (opcional, para SQL Server)
+## 🧩 1. Instalar requisitos
 
-### 1. Clonar y configurar
+### ✅ Requisitos mínimos:
+
+- **Python 3.10+**
+    
+- **Git**
+    
+- **Docker Desktop**
+    
+- **SQL Server 2019+ (Docker o local)**
+    
+
+---
+
+## 🧱 2. Instalar y preparar entorno
+
+### 🧰 2.1 Instalar Git
+
+Descarga desde:  
+👉 [https://git-scm.com/downloads](https://git-scm.com/downloads)
+
+Durante la instalación, deja las opciones por defecto.  
+Cuando termines, abre **PowerShell** y verifica:
+
 ```bash
-git clone <tu-repo-url>
-cd api_routeMaster
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate  # Windows
+git --version
+```
 
+---
+
+### 🐍 2.2 Instalar Python 3.12
+
+Descarga desde:  
+👉 [https://www.python.org/downloads/](https://www.python.org/downloads/)
+
+Durante la instalación:
+
+- ✅ Marca **“Add Python to PATH”**
+    
+- ✅ Instala para todos los usuarios
+    
+
+Verifica:
+
+```bash
+python --version
+pip --version
+```
+
+---
+
+## 🐳 3. Instalar y preparar Docker Desktop
+
+Descarga desde:  
+👉 [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+
+- Instálalo normalmente
+    
+- Reinicia Windows si lo pide
+    
+- Luego abre **Docker Desktop** y espera que diga:  
+    ✅ _Docker Engine running_
+    
+
+Verifica desde PowerShell:
+
+```bash
+docker version
+```
+
+---
+
+## 🧰 4. Levantar SQL Server en Docker
+
+En PowerShell o CMD, ejecuta:
+
+```bash
+docker run -e "ACCEPT_EULA=Y" `
+           -e "SA_PASSWORD=YourStrong!Passw0rd" `
+           -p 1433:1433 `
+           --name sqlserver `
+           -d mcr.microsoft.com/mssql/server:2019-latest
+```
+
+> 💡 Puedes cambiar `YourStrong!Passw0rd` si quieres, pero debe tener:
+> 
+> - Mínimo 8 caracteres
+>     
+> - Una mayúscula
+>     
+> - Una minúscula
+>     
+> - Un número
+>     
+> - Un símbolo
+>     
+
+Verifica que está corriendo:
+
+```bash
+docker ps
+```
+
+Si ves algo como:
+
+```
+CONTAINER ID   IMAGE                                     STATUS
+xxxxxx         mcr.microsoft.com/mssql/server:2019-latest   Up 10 seconds
+```
+
+todo está bien ✅
+
+---
+
+## 📦 5. Clonar el proyecto y crear entorno virtual
+
+```bash
+git clone https://github.com/Caliz17/api_routeMaster.git  
+cd api_routeMaster
+
+python -m venv venv
+venv\Scripts\activate
+```
+
+> Si ves `(venv)` al inicio del prompt, el entorno virtual está activo.
+
+---
+
+## 📜 6. Instalar dependencias
+
+```bash
 pip install -r requirements.txt
 ```
-### 2. Clonar y configurar
+
+---
+
+## ⚙️ 7. Configurar variables de entorno
+
+Copia el archivo de ejemplo:
+
 ```bash
-cp .env.example .env
-# Editar .env con tus configuraciones de base de datos
-```
-### 3. Clonar y configurar
-```bash
-# Las tablas se crean automáticamente al iniciar la aplicación
-python app/scripts/setup_database.py
+copy .env.example .env
 ```
 
+Edita el archivo `.env` con tu editor de texto favorito (por ejemplo, VS Code o Notepad):
 
-### 4. Ejecutar la aplicacion
+```env
+DATABASE_URL=mssql+pyodbc://sa:YourStrong!Passw0rd@localhost:1433/RouteMasterDB?driver=ODBC+Driver+17+for+SQL+Server
+JWT_SECRET_KEY=supersecretkey
+JWT_ALGORITHM=HS256
+```
+
+> ⚠️ Asegúrate de usar **el mismo password** que configuraste en el contenedor Docker.
+
+---
+
+## 🗄️ 8. Crear base de datos y tablas
+
+Ejecuta:
+
+```bash
+python app\scripts\setup_database.py
+```
+
+Esto creará la base de datos y las tablas necesarias.
+
+---
+
+## 🌱 9. Sembrar roles y permisos iniciales
+
+```bash
+python -m app.scripts.seed_roles
+python -m app.scripts.seed_permissions
+```
+
+> Si usas PowerShell, asegúrate de estar en la carpeta del proyecto y tener el entorno virtual activo.
+
+---
+
+## 🚀 10. Levantar la API
+
 ```bash
 uvicorn app.main:app --reload
+```
+
+La API quedará corriendo en:  
+👉 [http://localhost:8000](http://localhost:8000/)
+
+---
+
+## 📚 11. Ver documentación interactiva
+
+- **Swagger UI:** [http://localhost:8000/docs](http://localhost:8000/docs)
+    
+- **ReDoc:** [http://localhost:8000/redoc](http://localhost:8000/redoc)
+    
+
+---
+
+## 🧠 12. Comandos útiles
+
+|Acción|Comando|
+|---|---|
+|Ver contenedores activos|`docker ps`|
+|Detener contenedor SQL|`docker stop sqlserver`|
+|Iniciar contenedor SQL|`docker start sqlserver`|
+|Eliminar contenedor SQL|`docker rm -f sqlserver`|
+|Eliminar base y tablas (recrear)|`python app\scripts\setup_database.py`|
+
+---
+
+## ✅ Resultado Final
+
+Cuando termines estos pasos tendrás:
+
+- 🧱 SQL Server corriendo en Docker
+    
+- ⚙️ API FastAPI conectada a la base
+    
+- 🔑 Roles y permisos preconfigurados
+    
+- 📚 Documentación Swagger activa
+    
+- 🚀 Sistema listo para desarrollo
+    
 ```
 
 
